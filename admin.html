@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Markaz Public School</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --navy: #102B55; --page: #f4f7fb; }
+    body { background: var(--page); color: #1e293b; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .topbar { background: var(--navy); color: #fff; }
+    .sidebar { background: #fff; border-right: 1px solid #e5eaf1; min-height: calc(100vh - 72px); }
+    .side-link { display:block; padding: .75rem .9rem; color:#475569; text-decoration:none; border-radius:10px; margin:.2rem 0; }
+    .side-link.active, .side-link:hover { background:#edf3fc; color:var(--navy); }
+    .panel, .stat-card { background:#fff; border:1px solid #e7ecf3; border-radius:16px; box-shadow:0 5px 18px rgba(15, 35, 65, .04); }
+    .stat-card { padding:20px; height:100%; }
+    .stat-icon { width:42px; height:42px; display:grid; place-items:center; background:#edf3fc; color:var(--navy); border-radius:12px; font-size:1.2rem; }
+    .muted { color:#64748b; }
+    .table thead th { color:#64748b; font-size:.8rem; text-transform:uppercase; letter-spacing:.04em; font-weight:600; }
+    .pill { display:inline-block; padding:.3rem .6rem; border-radius:999px; font-size:.78rem; background:#fff4d6; color:#805b00; }
+    @media (max-width:767px) { .sidebar { min-height:auto; border-right:0; border-bottom:1px solid #e5eaf1; } }
+  </style>
+</head>
+<body>
+  <header class="topbar py-3">
+    <div class="container-fluid px-3 px-lg-4 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-2">
+        <div class="rounded-3 bg-white bg-opacity-10 p-2"><i class="bi bi-shield-lock fs-5"></i></div>
+        <div><div class="fw-bold">Markaz Public School</div><div class="small text-white-50">Administration dashboard</div></div>
+      </div>
+      <a href="index.html" class="btn btn-sm btn-outline-light"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+    </div>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row">
+      <aside class="col-md-3 col-lg-2 sidebar p-3">
+        <div class="small text-uppercase muted fw-semibold px-2 mb-2">Workspace</div>
+        <a class="side-link active" href="#overview"><i class="bi bi-grid me-2"></i>Overview</a>
+        <a class="side-link" href="#ideas"><i class="bi bi-lightbulb me-2"></i>Student ideas</a>
+        <a class="side-link" href="#complaints"><i class="bi bi-flag me-2"></i>Complaints & Reports</a>
+        <a class="side-link" href="#notices"><i class="bi bi-megaphone me-2"></i>Notices</a>
+        <hr>
+        <div class="small muted px-2">Live Storage Sync</div>
+      </aside>
+
+      <main class="col-md-9 col-lg-10 p-3 p-lg-4">
+        <section id="overview" class="mb-4">
+          <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+            <div><h1 class="h3 fw-bold mb-1">Admin overview</h1><p class="muted mb-0">Manage student submissions and complaints.</p></div>
+            <span class="badge rounded-pill text-bg-success border py-2 px-3"><i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i>Live Sync Active</span>
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="d-flex justify-content-between"><div><div class="muted small">Student ideas</div><div class="h2 fw-bold mt-2 mb-0" id="ideaCount">0</div></div><div class="stat-icon"><i class="bi bi-lightbulb"></i></div></div><div class="small muted mt-3">Total submissions</div></div></div>
+            <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="d-flex justify-content-between"><div><div class="muted small">Reports received</div><div class="h2 fw-bold mt-2 mb-0" id="complaintCount">0</div></div><div class="stat-icon"><i class="bi bi-flag"></i></div></div><div class="small muted mt-3">Total complaints</div></div></div>
+            <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="d-flex justify-content-between"><div><div class="muted small">Pending review</div><div class="h2 fw-bold mt-2 mb-0" id="pendingCount">0</div></div><div class="stat-icon"><i class="bi bi-hourglass-split"></i></div></div><div class="small muted mt-3">Needs attention</div></div></div>
+            <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="d-flex justify-content-between"><div><div class="muted small">Notices published</div><div class="h2 fw-bold mt-2 mb-0" id="noticeCount">0</div></div><div class="stat-icon"><i class="bi bi-megaphone"></i></div></div><div class="small muted mt-3">School announcements</div></div></div>
+          </div>
+        </section>
+
+        <!-- STUDENT IDEAS SECTION -->
+        <section id="ideas" class="panel p-3 p-lg-4 mb-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div><h2 class="h5 fw-bold mb-1">Student ideas</h2><p class="muted small mb-0">Submissions from the student portal.</p></div>
+            <select id="ideaFilter" class="form-select form-select-sm" style="max-width:180px" aria-label="Filter ideas">
+              <option value="All">All categories</option>
+              <option>Academics</option><option>Sports</option><option>Environment</option>
+              <option>Technology</option><option>Library</option><option>Student Welfare</option><option>Other</option>
+            </select>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead><tr><th>Title</th><th>Category</th><th>Description</th><th>Votes</th><th>Author</th><th>Action</th></tr></thead>
+              <tbody id="ideasTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- COMPLAINTS SECTION -->
+        <section id="complaints" class="panel p-3 p-lg-4 mb-4">
+          <div class="mb-3"><h2 class="h5 fw-bold mb-1">Complaint reports & Status</h2><p class="muted small mb-0">Update report statuses, respond, or delete records.</p></div>
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead><tr><th>Reference</th><th>Category</th><th>Subject / Details</th><th>Status</th><th>Admin Reply / Actions</th></tr></thead>
+              <tbody id="complaintsTable"></tbody>
+            </table>
+          </div>
+          <p id="statusMessage" class="small text-success mt-3 mb-0" role="status"></p>
+        </section>
+
+        <!-- NOTICES SECTION WITH TITLE & DESCRIPTION -->
+        <section id="notices" class="panel p-3 p-lg-4">
+          <h2 class="h5 fw-bold mb-1">School notices</h2><p class="muted small mb-3">Publish a notice with a title and description for students.</p>
+          <form id="noticeForm" class="row g-2 mb-3">
+            <div class="col-md-4">
+              <input class="form-control" id="noticeTitle" maxlength="100" required placeholder="Notice title">
+            </div>
+            <div class="col-md-5">
+              <input class="form-control" id="noticeDesc" maxlength="250" required placeholder="Notice description">
+            </div>
+            <div class="col-md-3">
+              <button class="btn w-100 text-white" style="background:var(--navy)" type="submit">
+                <i class="bi bi-plus-lg me-1"></i>Add notice
+              </button>
+            </div>
+          </form>
+          <ul id="noticeList" class="list-group list-group-flush"></ul>
+        </section>
+
+        <footer class="small muted text-center mt-4">Markaz Public School · Admin Portal</footer>
+      </main>
+    </div>
+  </div>
+
+<script>
+const COMPLAINTS_KEY = "schoolComplaints";
+const IDEAS_KEY = "schoolIdeas";
+const NOTICES_KEY = "schoolNotices";
+
+function getData(key, defaultVal) {
+  return JSON.parse(localStorage.getItem(key) || JSON.stringify(defaultVal));
+}
+function saveData(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+}
+
+function renderDashboard() {
+  const complaints = getData(COMPLAINTS_KEY, []);
+  const ideas = getData(IDEAS_KEY, []);
+  const defaultNotices = [
+    { title: "Student Innovation Exhibition", description: "Students can showcase creative models, technology projects and practical ideas." },
+    { title: "Student Suggestions Welcome", description: "Use the Student Idea Register to suggest improvements for school life." }
+  ];
+  const notices = getData(NOTICES_KEY, defaultNotices);
+
+  document.getElementById("ideaCount").textContent = ideas.length;
+  document.getElementById("complaintCount").textContent = complaints.length;
+  document.getElementById("pendingCount").textContent = complaints.filter(c => c.status === "Received" || c.status === "Pending").length;
+  document.getElementById("noticeCount").textContent = notices.length;
+
+  // Render Ideas
+  const filter = document.getElementById("ideaFilter").value;
+  const filteredIdeas = ideas.filter(x => filter === "All" || x.category === filter);
+  
+  document.getElementById("ideasTable").innerHTML = filteredIdeas.map(x => {
+    const originalIndex = ideas.findIndex(i => i.id === x.id);
+    return `<tr>
+      <td class="fw-semibold">${escapeHTML(x.title)}</td>
+      <td>${escapeHTML(x.category)}</td>
+      <td class="small text-muted">${escapeHTML(x.description)}</td>
+      <td><span class="badge bg-primary">${x.votes || 1}</span></td>
+      <td>${escapeHTML(x.author || "Anonymous")}</td>
+      <td>
+        <button class="btn btn-sm btn-outline-danger" onclick="deleteIdea(${originalIndex})" title="Delete Idea">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    </tr>`;
+  }).join("") || '<tr><td colspan="6" class="muted text-center py-4">No ideas submitted yet.</td></tr>';
+
+  // Render Complaints
+  const statuses = ["Received", "Under Review", "Action Required", "Resolved"];
+  document.getElementById("complaintsTable").innerHTML = complaints.map((x, i) =>
+    `<tr>
+      <td class="fw-semibold">${escapeHTML(x.id)}</td>
+      <td>${escapeHTML(x.category)}</td>
+      <td><strong>${escapeHTML(x.subject)}</strong><br><small class="text-muted">${escapeHTML(x.description)}</small></td>
+      <td><span class="pill">${escapeHTML(x.status)}</span></td>
+      <td>
+        <select class="form-select form-select-sm mb-2" data-action="status" data-index="${i}">
+          ${statuses.map(s => `<option ${s === x.status ? "selected" : ""}>${s}</option>`).join("")}
+        </select>
+        <div class="input-group input-group-sm mb-2">
+          <input type="text" class="form-control" data-action="reply" data-index="${i}" value="${escapeHTML(x.reply === "Waiting for admin review" ? "" : x.reply)}" placeholder="Type reply...">
+          <button class="btn btn-outline-primary" onclick="saveComplaintRow(${i})">Save</button>
+        </div>
+        <button class="btn btn-sm btn-danger w-100" onclick="deleteComplaint(${i})">
+          <i class="bi bi-trash me-1"></i>Delete Report
+        </button>
+      </td>
+    </tr>`
+  ).join("") || '<tr><td colspan="5" class="muted text-center py-4">No complaint reports received yet.</td></tr>';
+
+  // Render Notices with Title & Description
+  document.getElementById("noticeList").innerHTML = notices.map((n, idx) => {
+    const title = typeof n === 'string' ? n : n.title;
+    const desc = typeof n === 'string' ? '' : n.description;
+    return `<li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+      <div>
+        <strong><i class="bi bi-megaphone me-2 text-primary"></i>${escapeHTML(title)}</strong>
+        ${desc ? `<div class="small text-muted ms-4">${escapeHTML(desc)}</div>` : ''}
+      </div>
+      <button class="btn btn-sm btn-outline-danger" onclick="deleteNotice(${idx})" title="Delete Notice"><i class="bi bi-trash"></i></button>
+    </li>`;
+  }).join("") || '<li class="list-group-item px-0 text-muted">No notices published.</li>';
+}
+
+window.saveComplaintRow = function(index) {
+  const complaints = getData(COMPLAINTS_KEY, []);
+  const statusSelect = document.querySelector(`select[data-action="status"][data-index="${index}"]`);
+  const replyInput = document.querySelector(`input[data-action="reply"][data-index="${index}"]`);
+  
+  if (complaints[index]) {
+    complaints[index].status = statusSelect.value;
+    complaints[index].reply = replyInput.value.trim() || "No message from admin yet.";
+    saveData(COMPLAINTS_KEY, complaints);
+    document.getElementById("statusMessage").textContent = `Report ${complaints[index].id} updated successfully!`;
+    renderDashboard();
+  }
+};
+
+window.deleteComplaint = function(index) {
+  if (confirm("Are you sure you want to delete this complaint report?")) {
+    let complaints = getData(COMPLAINTS_KEY, []);
+    complaints.splice(index, 1);
+    saveData(COMPLAINTS_KEY, complaints);
+    document.getElementById("statusMessage").textContent = "Complaint report deleted successfully.";
+    renderDashboard();
+  }
+};
+
+window.deleteIdea = function(index) {
+  if (confirm("Are you sure you want to delete this student idea?")) {
+    let ideas = getData(IDEAS_KEY, []);
+    ideas.splice(index, 1);
+    saveData(IDEAS_KEY, ideas);
+    renderDashboard();
+  }
+};
+
+window.deleteNotice = function(index) {
+  let notices = getData(NOTICES_KEY, []);
+  notices.splice(index, 1);
+  saveData(NOTICES_KEY, notices);
+  renderDashboard();
+};
+
+document.getElementById("ideaFilter").addEventListener("change", renderDashboard);
+
+document.getElementById("noticeForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const titleInput = document.getElementById("noticeTitle");
+  const descInput = document.getElementById("noticeDesc");
+  
+  let notices = getData(NOTICES_KEY, []);
+  notices.unshift({
+    title: titleInput.value.trim(),
+    description: descInput.value.trim()
+  });
+  
+  saveData(NOTICES_KEY, notices);
+  titleInput.value = "";
+  descInput.value = "";
+  renderDashboard();
+});
+
+renderDashboard();
+</script>
+</body>
+</html>
